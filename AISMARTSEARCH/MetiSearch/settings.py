@@ -1,6 +1,3 @@
-
-
-
 """
 Django settings for MetiSearch project.
 
@@ -31,21 +28,21 @@ SECRET_KEY = "django-insecure-12)qzr@+vd$+cn_f20!yud2&)f^ghpau9n%87tar0s1lletp6-
 # Fetch the OpenAI API key from the environment
 
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY")  # Define media settings
-print(OPENAI_KEY)
 if not OPENAI_KEY:
-    raise ValueError(
-        "OpenAI API key is not set. Please add it to your environment variables.")
+    raise ValueError("OpenAI API key is not set. Please add it to your environment variables.")
 
 
 MEDIA_URL = "/media/"  # URL for accessing uploaded files
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.onrender.com']
+
+ALLOWED_HOSTS = [".onrender.com"]
 
 
 # Directory to store static files
 STATIC_URL = "/static/"
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),  # Your static files directory
 ]
@@ -64,24 +61,27 @@ INSTALLED_APPS = [
     "Questions",
     "corsheaders",
     "rest_framework",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",  # your frontend
+    r"^https:\/\/.*\.onrender\.com$",
+    "https://temnex.com/"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 # settings.py
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",             # ✅ MUST be first
+    "corsheaders.middleware.CorsMiddleware",  # ✅ MUST be first
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
