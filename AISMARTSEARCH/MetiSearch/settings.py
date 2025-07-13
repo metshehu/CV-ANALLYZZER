@@ -41,7 +41,7 @@ MEDIA_URL = "/media/"  # URL for accessing uploaded files
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com']
 
 
 # Directory to store static files
