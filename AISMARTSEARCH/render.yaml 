@@ -1,12 +1,21 @@
 services:
   - type: web
-    name: django-backend
+    name: metisearch-backend
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn MetiSearch.wsgi
+    startCommand: gunicorn MetiSearch.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: MetiSearch.settings
-      - key: PYTHON_VERSION
-        value: 3.11
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_PROJECT
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        sync: false
+      - key: LANGCHAIN_ENDPOINT
+        sync: false
+      - key: DEBUG
+        sync: false
+
