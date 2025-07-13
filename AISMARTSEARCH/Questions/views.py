@@ -8,15 +8,21 @@ from os import walk
 from pathlib import Path
 
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage, default_storage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from Main import Parsers
 from openai import OpenAI
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .forms import FileUploadForm, MakeDirForm, UserValueForm
 from .models import Chunk, History, UserValues
+from .serializers import UserValuesSerializer
 
 
 def getalldirs(mypath):
@@ -145,8 +151,7 @@ def addContext(data, message):
         newdic = {
             "role": "system",
             "content": (
-                f"The following file: '{
-                    file_name}' contains relevant information to support the answer: \n"
+                f"The following file: '{file_name}' contains relevant information to support the answer: \n"
                 f"{chunks}"
             ),
         }
@@ -555,7 +560,7 @@ def save_file(uploaded_file, user):
     return fileEmbedings
 
 
-def asking_Front( user, query):
+def asking_Front(user, query):
     fileEmbedings = Parsers(settings.OPENAI_KEY)
     query_vector = fileEmbedings.embedquerry(query)
     chunks, vectors, all_data = system_file_parser(query_vector, user)
@@ -563,7 +568,7 @@ def asking_Front( user, query):
     pastQuestion, pastAnswe = unpack_history(history)
 
     for i in all_data:
-        print("this is a file -> ",i)
+        print("this is a file -> ", i)
     print("this is before context ")
     res = context_aware_responses_Front(
         query, pastQuestion, pastAnswe, all_data, user)
@@ -576,7 +581,7 @@ def asking_search(user, query):
     fileEmbedings = Parsers(settings.OPENAI_KEY)
     query_vector = fileEmbedings.embedquerry(query)
     chunks, vectors, all_data = system_file_parser(query_vector, user)
-    files=[]
+    files = []
     for i in all_data:
         files.append(i)
     print("this is before context ")
@@ -584,13 +589,31 @@ def asking_search(user, query):
     return files
 
 
+@csrf_exempt
+def ok(request):
+    print("Upload endpoint called")
+    if request.method == "POST":
+        uploaded_file = request.FILES.get("file")
+        if uploaded_file:
+            default_storage.save(
+                f"uploads/{uploaded_file.name}", uploaded_file)
+            return JsonResponse({"message": "hey you have uploaded it correctly"})
+    return JsonResponse({"error": "No file uploaded or wrong method"}, status=400)
 
-def search_Front(request,user,query):
+
+def search_Front(request, user, query):
     responds = ""
     mypath = settings.STATIC_UPLOAD_DIR + "/" + user
     responds = asking_search(user, query)
 
     return JsonResponse({"answer": responds})
+
+
+def get_cv(request, user):
+
+    mypath = settings.STATIC_UPLOAD_DIR + "/" + user
+    pdf_files = allFileformat(mypath, ".pdf")
+    return JsonResponse({"users":pdf_files})
 
 
 def chat_Front(request, user, query):
@@ -599,6 +622,43 @@ def chat_Front(request, user, query):
     responds, all_data = asking_Front(user, query)
 
     return JsonResponse({"answer": responds})
+
+
+@csrf_exempt
+def fileuploadfront(request, user):
+    if request.method == "POST" and request.FILES.get("file"):
+        uploaded_file = request.FILES["file"]
+
+        user_dir = Path(settings.STATIC_UPLOAD_DIR) / user
+        user_dir.mkdir(
+            parents=True, exist_ok=True
+        )  # Create the user's directory if it doesn't exist
+
+        file_path = user_dir / uploaded_file.name
+
+        if file_path.exists():
+            return JsonResponse({"success": False, "message": "The file already exists."})
+        my_file = Path(
+            f"{settings.STATIC_UPLOAD_DIR}/{user}/{uploaded_file.name}")
+
+        if not my_file.is_file():
+            save_file(uploaded_file, user)
+
+        with open(file_path, "wb+") as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "hey you have uploaded it correctly",
+                "filename": uploaded_file.name,
+            }
+        )
+
+    return JsonResponse(
+        {"success": False, "message": "No file uploaded or wrong method"}, status=400
+    )
 
 
 @csrf_exempt
@@ -615,3 +675,26 @@ def fileupload(request, user):
     else:
         form = FileUploadForm()
     return render(request, "save-static.html", {"form": form})
+
+
+# views.py
+
+
+@api_view(["POST"])
+def signup(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists"}, status=400)
+    user = User.objects.create_user(username=username, password=password)
+    return Response({"message": "User created successfully"}, status=201)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_values(request):
+    try:
+        uv = UserValues.objects.get(user=request.user)
+        return Response(UserValuesSerializer(uv).data)
+    except UserValues.DoesNotExist:
+        return Response({"error": "User values not found"}, status=404)

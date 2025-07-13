@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: metisearch-django
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn MetiSearch.wsgi
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: MetiSearch.settings
+      - key: PYTHON_VERSION
+        value: 3.11
+

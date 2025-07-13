@@ -63,14 +63,25 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "Questions",
     "corsheaders",
+    "rest_framework",
+    "rest_framework_simplejwt"
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",  # your frontend
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+# settings.py
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",             # ✅ MUST be first
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -78,9 +89,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
 ]
-
 ROOT_URLCONF = "MetiSearch.urls"
 
 TEMPLATES = [

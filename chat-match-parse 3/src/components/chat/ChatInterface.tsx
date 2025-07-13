@@ -81,7 +81,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     userInput: string,
   ): Promise<ChatMessage> => {
     const encodedQuery = encodeURIComponent(userInput);
-    const url = `http://127.0.0.1:8000/questions/NardiTest/${encodedQuery}`;
+    const username="NardiTest"//localStorage.getItem('name')
+
+    const url = `http://127.0.0.1:8000/questions/${username}/${encodedQuery}`;
+    console.log(url)
 
     try {
       const response = await fetch(url);

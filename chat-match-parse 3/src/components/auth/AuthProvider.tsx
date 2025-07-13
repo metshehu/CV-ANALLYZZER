@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useEffect,useContext, useState, ReactNode } from "react";
+
 
 interface User {
   email: string;
@@ -7,7 +8,10 @@ interface User {
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
 }
 
@@ -16,35 +20,64 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const users: User[] = [
   {
     email: "getuartpacarizi@gmail.com",
-    password: "Getuart"
+    password: "Getuart",
   },
   {
     email: "metshehu@gmail.com",
-    password: "Meti"
+    password: "Meti",
   },
   {
     email: "nadidida@gmail.com",
-    password: "Nadi"
-  }
+    password: "Nadi",
+  },
 ];
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  useEffect(() => {
+  const token = localStorage.getItem("access_token");
+    if (token) {
+  setIsAuthenticated(true);
+  }
+  }, []);
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
-    return new Promise((resolve) => {
-      const user = users.find(u => u.email === email && u.password === password);
-      
-      if (user) {
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; message: string }> => {
+    try {
+      const response = await fetch("http://localhost:8000/api/token/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: email, password }), // Use `username` if you're using Django default auth
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Store the JWT token locally (in localStorage or memory)
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
+        localStorage.setItem("name",email);
         setIsAuthenticated(true);
-        resolve({ success: true, message: "Successfully signed in!" });
+        return { success: true, message: "Successfully signed in!" };
       } else {
-        resolve({ success: false, message: "Invalid email or password" });
+        return { success: false, message: "Invalid email or password" };
       }
-    });
+    } catch (error) {
+      console.error("Login error:", error);
+      return { success: false, message: "Something went wrong during login." };
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("name");
     setIsAuthenticated(false);
   };
 
@@ -58,7 +91,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-}; 
+};
