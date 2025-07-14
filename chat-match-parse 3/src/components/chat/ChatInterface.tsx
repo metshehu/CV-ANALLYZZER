@@ -83,7 +83,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     const encodedQuery = encodeURIComponent(userInput);
     const username="NardiTest"//localStorage.getItem('name')
 
-    const url = `http://127.0.0.1:8000/questions/${username}/${encodedQuery}`;
+    const url = `http://cv-anallyzzer.onrender.com/questions/${username}/${encodedQuery}`;
     console.log(url)
 
     try {
