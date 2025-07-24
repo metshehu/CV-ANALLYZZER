@@ -20,7 +20,7 @@ const CandidateDetails = () => {
   useEffect(() => {
     const fetchCVs = async () => {
       try {
-        const res = await fetch(`http://cv-anallyzzer.onrender.com/get-cv/${user}/`);
+        const res = await fetch(`https://cv-anallyzzer.onrender.com/get-cv/${user}/`);
         const data = await res.json();
         setUploadedCVs(data.users.map((name: string) => ({ name })));
       } catch (error) {
@@ -36,7 +36,7 @@ const CandidateDetails = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch(`http://cv-anallyzzer.onrender.com/api/upload/${user}/`, {
+      const res = await fetch(`https://cv-anallyzzer.onrender.com/api/upload/${user}/`, {
         method: "POST",
         body: formData,
       });
