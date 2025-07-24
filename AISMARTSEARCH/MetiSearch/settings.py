@@ -51,6 +51,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # Collected static files
 
 # Application definition
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -65,7 +67,6 @@ INSTALLED_APPS = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",  # your frontend
-    r"^https:\/\/.*\.onrender\.com$",
     "https://temnex.com/",
     "https://168.231.81.181",  # prod frontend
 ]
