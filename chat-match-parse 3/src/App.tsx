@@ -9,8 +9,9 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import DashboardAccess from "@/components/layout/DashboardAccess";
-
+import About from "./components/about/About";
 const queryClient = new QueryClient();
+
 
 function App() {
   const [isSignInOpen, setIsSignInOpen] = useState(false);
@@ -26,12 +27,28 @@ function App() {
           <BrowserRouter>
             <div className="min-h-screen bg-[#190026]">
               <Routes>
-                <Route path="/" element={<Index isSignInOpen={isSignInOpen} setIsSignInOpen={setIsSignInOpen} />} />
-                <Route path="/dashboard" element={
-                  <DashboardAccess onRequireSignIn={openSignIn}>
-                    <Dashboard isSignInOpen={isSignInOpen} setIsSignInOpen={setIsSignInOpen} />
-                  </DashboardAccess>
-                } />
+                <Route
+                  path="/"
+                  element={
+                    <Index
+                      isSignInOpen={isSignInOpen}
+                      setIsSignInOpen={setIsSignInOpen}
+                    />
+                  }
+                />
+                <Route path="/about" element={<About />} />
+
+                <Route
+                  path="/dashboard"
+                  element={
+                    <DashboardAccess onRequireSignIn={openSignIn}>
+                      <Dashboard
+                        isSignInOpen={isSignInOpen}
+                        setIsSignInOpen={setIsSignInOpen}
+                      />
+                    </DashboardAccess>
+                  }
+                />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

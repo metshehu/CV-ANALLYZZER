@@ -32,10 +32,11 @@ const features = [
 
 const Features = () => {
   return (
-    <section className=" text-white py-24 bg-muted/30" id="features">
+            <section className="text-white py-24 bg-[#2e014e]" id="features">
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl text-black font-bold mb-4">Powerful Features</h2>
+          <h2 className="text-3xl md:text-4xl text-white font-bold mb-4">Powerful Features</h2>
           <p className="text-lg text-muted-foreground">
             Our AI-powered talent matching platform streamlines every step of the recruitment process.
           </p>

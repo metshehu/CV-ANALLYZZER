@@ -45,7 +45,6 @@ const Header: React.FC<HeaderProps> = ({ isSignInOpen, setIsSignInOpen }) => {
 
   const menuItems = [
     { name: "Home", path: "/" },
-    { name: "Candidates", path: "/candidates" },
     { name: "About", path: "/about" },
   ];
 

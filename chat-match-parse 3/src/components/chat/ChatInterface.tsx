@@ -29,7 +29,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesEndRef.current?.parentElement;
+
+    if (container) {
+      container.scrollBy({
+        top: container.scrollHeight * 0.1, // 10% of total scroll height
+        behavior: "smooth",
+      });
+    }
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -81,10 +88,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     userInput: string,
   ): Promise<ChatMessage> => {
     const encodedQuery = encodeURIComponent(userInput);
-    const username="NardiTest"//localStorage.getItem('name')
+    const username = "NardiTest"; //localStorage.getItem('name')
 
     const url = `https://cv-anallyzzer.onrender.com/questions/${username}/${encodedQuery}`;
-    console.log(url)
+    console.log(url);
 
     try {
       const response = await fetch(url);

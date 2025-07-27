@@ -37,7 +37,7 @@ const Dashboard: React.FC<DashboardProps> = ({ className }) => {
   };
 
   const handleScroll = () => {
-    setHoveredImage(null);
+setHoveredImage(null);
     setCanHover(false);
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
