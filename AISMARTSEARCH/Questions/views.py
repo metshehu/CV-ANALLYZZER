@@ -640,6 +640,7 @@ def fileuploadfront(request, user):
             return JsonResponse({"success": False, "message": "The file already exists."})
         my_file = Path(
             f"{settings.STATIC_UPLOAD_DIR}/{user}/{uploaded_file.name}")
+        print(f"this is the file path {my_file}")
 
         if not my_file.is_file():
             save_file(uploaded_file, user)
@@ -669,7 +670,8 @@ def fileupload(request, user):
             f"{settings.STATIC_UPLOAD_DIR}/{user}/{uploaded_file.name}")
         if not my_file.is_file():
             save_file(uploaded_file, user)
-            return redirect(f"/chat/{user}/")
+            return JsonResponse({"success": True, "data": "The File is Saved"})
+
         else:
             return JsonResponse({"success": False, "data": "The File Existers allready"})
     else:

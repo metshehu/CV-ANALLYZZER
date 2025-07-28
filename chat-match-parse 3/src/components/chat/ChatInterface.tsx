@@ -88,8 +88,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     userInput: string,
   ): Promise<ChatMessage> => {
     const encodedQuery = encodeURIComponent(userInput);
-    const username = "NardiTest"; //localStorage.getItem('name')
 
+    let username = localStorage.getItem("name");
+
+    // If no name is saved, use default
+    if (!username) {
+      username = "NardiTest";
+      localStorage.setItem("name", username); // optionally save the default too
+    }
     const url = `https://cv-anallyzzer.onrender.com/questions/${username}/${encodedQuery}`;
     console.log(url);
 

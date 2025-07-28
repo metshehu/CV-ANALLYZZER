@@ -15,12 +15,20 @@ const CandidateDetails = () => {
   const [uploadedCVs, setUploadedCVs] = useState<CVFile[]>([]);
   const [selectedCV, setSelectedCV] = useState<CVFile | null>(null);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const user = localStorage.getItem("name") || "NardiTest";
+  let user = localStorage.getItem("name");
+
+  // If no name is saved, use default
+  if (!user) {
+    user = "NardiTest";
+    localStorage.setItem("name", user); // optionally save the default too
+  }
 
   useEffect(() => {
     const fetchCVs = async () => {
       try {
-        const res = await fetch(`https://cv-anallyzzer.onrender.com/get-cv/${user}/`);
+        const res = await fetch(
+          `https://cv-anallyzzer.onrender.com/get-cv/${user}/`,
+        );
         const data = await res.json();
         setUploadedCVs(data.users.map((name: string) => ({ name })));
       } catch (error) {
@@ -36,10 +44,13 @@ const CandidateDetails = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch(`https://cv-anallyzzer.onrender.com/api/upload/${user}/`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `https://cv-anallyzzer.onrender.com/api/upload/${user}/`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
       const data = await res.json();
 
@@ -117,7 +128,7 @@ const CandidateDetails = () => {
                 onClick={() => setSelectedCV(file)}
                 className={cn(
                   "flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-all duration-300",
-                  "hover:bg-pink-100/10"
+                  "hover:bg-pink-100/10",
                 )}
               >
                 <Avatar className="h-10 w-10">
@@ -145,4 +156,3 @@ const CandidateDetails = () => {
 };
 
 export default CandidateDetails;
-
