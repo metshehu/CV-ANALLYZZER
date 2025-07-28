@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     password: string,
   ): Promise<{ success: boolean; message: string }> => {
     try {
-      const response = await fetch("http://cv-anallyzzer.onrender.com/api/token/", {
+      const response = await fetch("https://cv-anallyzzer.onrender.com/api/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
