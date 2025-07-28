@@ -37,7 +37,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 
-ALLOWED_HOSTS = ["cv-anallyzzer.onrender.com", "168.231.81.181", "localhost", ".onrender.com"]
+ALLOWED_HOSTS = [
+    "cv-anallyzzer.onrender.com",
+    "168.231.81.181",
+    "localhost",
+    ".onrender.com",
+    "127.0.0.1",
+]
 
 
 # Directory to store static files
@@ -67,7 +73,6 @@ INSTALLED_APPS = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",  # your frontend
-    "https://temnex.com/",
     "https://168.231.81.181",  # prod frontend
 ]
 CORS_ALLOW_CREDENTIALS = True
