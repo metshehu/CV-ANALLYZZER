@@ -28,7 +28,7 @@ const About: React.FC<AboutProps> = ({ isSignInOpen, setIsSignInOpen }) => {
           <h2 className="text-3xl font-semibold text-center text-purple-300 mb-10">
             Meet the Team
           </h2>
-          <div className="grid gap-8 md:grid-cols-3 text-center">
+          <div className="grid gap-8 md:grid-cols-2 text-center">
             {/* Team Member 1 */}
             <div className="bg-[#260038] p-6 rounded-xl shadow-lg">
               <h3 className="text-xl font-semibold text-purple-200">Met Shehu</h3>
@@ -39,20 +39,13 @@ const About: React.FC<AboutProps> = ({ isSignInOpen, setIsSignInOpen }) => {
             </div>
             {/* Team Member 2 */}
             <div className="bg-[#260038] p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold text-purple-200">Nardi Dida</h3>
+              <h3 className="text-xl font-semibold text-purple-200">Nadi Dida</h3>
               <p className="text-sm text-gray-300 mt-2">
                 Co-Founder and Head of Sales and Product Development. Responsible
                 for shaping the business vision...
               </p>
             </div>
             {/* Team Member 3 */}
-            <div className="bg-[#260038] p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold text-purple-200">Getuart Paqarizi</h3>
-              <p className="text-sm text-gray-300 mt-2">
-                Frontend Engineer with a passion for design systems, responsive
-                interfaces, and smooth user interactions...
-              </p>
-            </div>
           </div>
         </section>
 
