@@ -2,15 +2,13 @@ import React, { useState, useCallback } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import DashboardAccess from "@/components/layout/DashboardAccess";
-import About from "./components/about/About";
-const queryClient = new QueryClient();
 
 
 function App() {
@@ -20,7 +18,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={''}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -36,7 +34,6 @@ function App() {
                     />
                   }
                 />
-                <Route path="/about" element={<About />} />
 
                 <Route
                   path="/dashboard"

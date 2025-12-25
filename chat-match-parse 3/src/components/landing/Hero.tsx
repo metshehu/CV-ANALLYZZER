@@ -3,7 +3,6 @@ import { ArrowRight, Search, Users, FileText, BrainCircuit } from "lucide-react"
 import { CustomButton } from "@/components/ui/custom-button";
 import { Link } from "react-router-dom";
 import ChatInterface from "../chat/ChatInterface";
-import CandidateDetails from "../chat/CandidateDetails";
 
 const Hero = () => {
   const animatedTextRef = useRef<HTMLSpanElement>(null);
@@ -100,9 +99,6 @@ const Hero = () => {
           <div className="grid grid-cols-1 lg:grid-cols-11 gap-8 max-w-7xl mx-auto animate-slide-up mb-12" style={{ animationDelay: '0.6s' }}>
             <div className="lg:col-span-7">
               <ChatInterface />
-            </div>
-            <div className="lg:col-span-4">
-              <CandidateDetails />
             </div>
           </div>
           
